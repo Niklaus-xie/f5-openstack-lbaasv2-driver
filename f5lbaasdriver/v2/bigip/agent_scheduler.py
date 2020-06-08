@@ -273,7 +273,7 @@ class TenantScheduler(agent_scheduler.ChanceScheduler):
                 # lowest capacity score
                 lowest_utilization = 1.0
                 selected_group = 1
-                for group, capacity in capacity_by_group.items():
+                for group, capacity in list(capacity_by_group.items()):
                     if capacity < lowest_utilization:
                         lowest_utilization = capacity
                         selected_group = group

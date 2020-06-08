@@ -36,7 +36,7 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 def log_test_call(func):
     def wrapper(func, *args, **kwargs):
-        print("\nRunning %s" % func.func_name)
+        print(("\nRunning %s" % func.__name__))
         return func(*args, **kwargs)
     return decorator.decorator(wrapper, func)
 
@@ -481,7 +481,7 @@ def test_solution(tst_setup):
     te.webserver_started = True
 
     # wait for health monitor to show server as up
-    print('waiting for member to become active...',)
+    print(('waiting for member to become active...',))
     if te.symbols['lbaas_version'] == 1:
         te.lbm.wait_for_object_state('status', 'ACTIVE',
                                      te.lbm.ncm.show_member, 'member',
@@ -519,7 +519,7 @@ def test_solution(tst_setup):
     print('COMPLETE')
 
     # send requests from client
-    print('sending request from client....',)
+    print(('sending request from client....',))
     if te.symbols['lbaas_version'] == 1:
         url = 'http://%s:%s' % (proxy.vip['address'],
                                 proxy.vip['protocol_port'])

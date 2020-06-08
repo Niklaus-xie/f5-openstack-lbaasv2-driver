@@ -41,7 +41,7 @@ The utility writes the class string into the appropriate location (module) in
 the Python namespace, (i.e. within the ** directory mentioned above).
 """
 
-from __future__ import absolute_import
+
 
 import inspect
 import logging
@@ -132,9 +132,9 @@ def write_config_file(config_to_write):
     """
 
     with open(NEUTRON_LBAASCONFPATH, 'w') as cfh:
-        for section, options in config_to_write.sections.items():
+        for section, options in list(config_to_write.sections.items()):
             cfh.write('['+section+']\n')
-            for opt, values in options.items():
+            for opt, values in list(options.items()):
                 for value in values:
                     cfh.write(" ".join([opt, "=", value]) + '\n')
 

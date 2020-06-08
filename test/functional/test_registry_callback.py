@@ -81,8 +81,8 @@ def test_neutron_registry_callback(mock_agent_rpc):
 
         # debug messages logged
         log_iter = iter(mock_log.debug.call_args_list)
-        args, kwargs = log_iter.next()
+        args, kwargs = next(log_iter)
         assert str(args[0]).startswith("F5DriverV2 with env None received")
 
-        args, kwargs = log_iter.next()
+        args, kwargs = next(log_iter)
         assert str(args[0]).startswith("F5DriverV2 with env dmz received")

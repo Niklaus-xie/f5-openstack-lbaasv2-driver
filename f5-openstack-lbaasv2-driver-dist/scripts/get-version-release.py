@@ -18,8 +18,8 @@ def runCommand(cmd):
                              stderr=subprocess.PIPE
                              )
         (output) = p.communicate()[0]
-    except OSError, e:
-        print >>sys.stderr, "Execution failed:", e
+    except OSError as e:
+        print("Execution failed:", e, file=sys.stderr)
 
     return (output, p.returncode)
 
@@ -73,9 +73,9 @@ def main(args):
         results.append(branch)
 
     if len(results):
-        print('%s' % ' '.join(map(str, results)))
+        print(('%s' % ' '.join(map(str, results))))
     else:
-        print(version, releaseNumber, commit, branch)
+        print((version, releaseNumber, commit, branch))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

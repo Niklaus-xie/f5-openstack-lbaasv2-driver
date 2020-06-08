@@ -23,7 +23,7 @@ import yaml
 def BigIPSetup(symbols):
     bigipdict = symbols.__dict__.get("clusterbigips", {})
     bigiplist = []
-    for bigip, attr in bigipdict.iteritems():
+    for bigip, attr in bigipdict.items():
          bigiplist.append(ManagementRoot(attr['netloc'],
                                          attr['username'],
                                          attr['password']))

@@ -38,13 +38,13 @@ class UpdateScanner(object):
 
     def _build_param_vector(self):
         param_vector = []
-        for k, v in self.ordered_config.iteritems():
+        for k, v in self.ordered_config.items():
             param_vector.append((k, self._toggle_state(v)))
         return param_vector
 
     def _toggle_state(self, config_value):
         # Note this doesn't handle reference cycles.
-        if isinstance(config_value, basestring):
+        if isinstance(config_value, str):
             return config_value+'_test'
         elif isinstance(config_value, bool):
             return not config_value
@@ -58,7 +58,7 @@ class UpdateScanner(object):
         elif isinstance(config_value, dict):
             if config_value:
                 t = config_value.copy()
-                for k, v in t.iteritems():
+                for k, v in t.items():
                     t[k] = self._toggle_state(v)
                 return t
             else:
