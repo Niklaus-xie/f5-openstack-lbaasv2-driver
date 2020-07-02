@@ -17,10 +17,11 @@
 
 from f5lbaasdriver.v2.bigip import constants_v2 as constants
 
-from neutron.common import rpc as neutron_rpc
+from neutron_lib import rpc as neutron_rpc
 from neutron.db import agents_db
 from neutron.db.models import agent as agents_model
-from neutron.plugins.common import constants as plugin_constants
+# from neutron.plugins.common import constants as plugin_constants
+from neutron_lib import constants as plugin_constants
 
 from neutron_lbaas.db.loadbalancer import models
 from neutron_lbaas.services.loadbalancer import constants as nlb_constant
@@ -49,7 +50,7 @@ class LBaaSv2PluginCallbacksRPC(object):
         if self.driver.env:
             topic = topic + "_" + self.driver.env
 
-        self.conn = neutron_rpc.create_connection()
+        self.conn = neutron_rpc.Connection()
 
         # check this later
         self.conn.create_consumer(

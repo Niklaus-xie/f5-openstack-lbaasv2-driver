@@ -398,7 +398,7 @@ def test_solution(tst_setup):
     proxy = te.lbm.create_proxy()
 
     print("start web server")
-    command = ('python -m SimpleHTTPServer %s >/dev/null 2>&1 & echo $!' %
+    command = ('python3 -m SimpleHTTPServer %s >/dev/null 2>&1 & echo $!' %
                te.symbols['server_http_port'])
     exec_command(te.server_ssh, command)
     te.webserver_started = True

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Copyright 2014 F5 Networks Inc.
 #
@@ -61,7 +61,7 @@ NEUTRON_LBAASCONF_BAK_PATH =\
     NEUTRON_LBAASCONFPATH + str(time.time()) + '_bak'
 
 ENVMODULETEMPLATE = '''\
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Copyright 2014-2016 F5 Networks Inc.
 #

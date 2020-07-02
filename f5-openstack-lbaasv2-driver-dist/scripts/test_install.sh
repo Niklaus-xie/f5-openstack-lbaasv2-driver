@@ -7,7 +7,7 @@ DIST_DIR="${PKG_NAME}-dist"
 
 BUILD_CONTAINER="${OS_TYPE}${OS_VERSION}-${PKG_NAME}-pkg-tester"
 WORKING_DIR="/var/wdir"
-PKG_VERSION=$(python -c "import f5lbaasdriver; print(f5lbaasdriver.__version__)")
+PKG_VERSION=$(python3 -c "import f5lbaasdriver; print(f5lbaasdriver.__version__)")
 PKG_RELEASE=$(${DIST_DIR}/scripts/get-version-release.py --release)
 
 if [[ ${OS_TYPE} == "redhat" ]]; then

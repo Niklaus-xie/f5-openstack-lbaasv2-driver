@@ -126,7 +126,7 @@ RPM
 .. parsed-literal::
 
    curl -O -L |f5_lbaasv2_driver_shim_url|
-   sudo tar xvf f5.tgz -C /usr/lib/python2.7/site-packages/neutron_lbaas/drivers/
+   sudo tar xvf f5.tgz -C /usr/lib/python3.6/site-packages/neutron_lbaas/drivers/
    curl –L –O |f5_lbaasv2_driver_rpm_url|
    rpm –ivh |f5_lbaasv2_driver_rpm_package|
 
