@@ -52,7 +52,7 @@ class LBaaSv2PluginCallbacksRPC(object):
 
         self.conn = neutron_rpc.Connection()
 
-        # check this later
+        # check
         self.conn.create_consumer(
             topic,
             [self, agents_db.AgentExtRpcCallback(self.driver.plugin.db)],

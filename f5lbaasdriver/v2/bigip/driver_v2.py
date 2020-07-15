@@ -25,9 +25,8 @@ from oslo_utils import importutils
 from neutron_lib.callbacks import events
 from neutron_lib.callbacks import registry
 from neutron_lib.callbacks import resources
-from neutron.plugins.common import constants as plugin_constants
+from neutron_lib import constants as plugin_constants
 from neutron_lib.api.definitions import portbindings
-from neutron_lib import constants as q_const
 
 from neutron_lbaas.db.loadbalancer import models
 from neutron_lbaas.extensions import lbaas_agentschedulerv2
@@ -107,6 +106,7 @@ class F5DriverV2(object):
         self.service_builder = importutils.import_object(
             cfg.CONF.f5_loadbalancer_service_builder_v2, self)
 
+        # here
         self.agent_rpc = agent_rpc.LBaaSv2AgentRPC(self)
         self.plugin_rpc = plugin_rpc.LBaaSv2PluginCallbacksRPC(self)
 
@@ -116,7 +116,7 @@ class F5DriverV2(object):
         # add this agent RPC to the neutron agent scheduler
         # mixins agent_notifiers dictionary for it's env
         self.plugin.agent_notifiers.update(
-            {q_const.AGENT_TYPE_LOADBALANCER: self.agent_rpc})
+            {plugin_constants.AGENT_TYPE_LOADBALANCER: self.agent_rpc})
 
         registry.subscribe(self._bindRegistryCallback(),
                            resources.PROCESS,
@@ -130,7 +130,7 @@ class F5DriverV2(object):
             LOG.debug("F5DriverV2 with env %s received post neutron child "
                       "fork notification pid(%d) print trigger(%s)" % (
                           self.env, os.getpid(), trigger))
-            # check this later
+            # check this
             self.plugin_rpc.create_rpc_listener()
 
         post_fork_callback.__name__ += '_' + str(self.env)
@@ -219,7 +219,7 @@ class LoadBalancerManager(EntityManager):
                 port_data = {
                     'admin_state_up': True,
                     'device_owner': 'F5:lbaasv2',
-                    'status': q_const.PORT_STATUS_ACTIVE
+                    'status': plugin_constants.PORT_STATUS_ACTIVE
                 }
                 port_data[portbindings.HOST_ID] = agent_host
                 if driver.unlegacy_setting_placeholder_driver_side:
