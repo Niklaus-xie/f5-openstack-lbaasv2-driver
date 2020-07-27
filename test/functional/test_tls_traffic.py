@@ -34,12 +34,12 @@ from f5_openstack_agent.lbaasv2.drivers.bigip import ssl_profile
 from f5_openstack_agent.lbaasv2.drivers.bigip import barbican_cert
 from keystoneauth1 import identity
 from keystoneauth1 import session
-print "Imports complete..."
+print("Imports complete...")
 
 
 def log_test_call(func):
     def wrapper(func, *args, **kwargs):
-        print("\nRunning %s" % func.func_name)
+        print(("\nRunning %s" % func.__name__))
         return func(*args, **kwargs)
     return decorator.decorator(wrapper, func)
 
@@ -217,30 +217,30 @@ class LBaaSv2(object):
         self.ncm.delete_loadbalancer(proxy.loadbalancer['id'])
 
     def clear_proxies(self):
-        print "clearing proxies..."
-        print "    healthmonitors"
+        print("clearing proxies...")
+        print("    healthmonitors")
         self.ncm.delete_all_lbaas_healthmonitors()
-        print "    lbaas pools"
+        print("    lbaas pools")
         self.ncm.delete_all_lbaas_pools()
-        print "    listeners"
+        print("    listeners")
         self.ncm.delete_all_listeners()
-        print "    loadbalancers"
+        print("    loadbalancers")
         self.ncm.delete_all_loadbalancers()
-        print "    complete"
+        print("    complete")
         if self.symbols['debug']:
             self.debug()
 
     def debug(self):
-        print '----- loadbalancers -----'
+        print('----- loadbalancers -----')
         pp(self.ncm.list_loadbalancers())
-        print '----- listeners -----'
+        print('----- listeners -----')
         pp(self.ncm.list_listeners())
-        print '----- pools -----'
+        print('----- pools -----')
         pp(self.ncm.list_lbaas_pools())
-        print '----- members -----'
+        print('----- members -----')
         for p in self.ncm.list_lbaas_pools()['pools']:
             pp(self.ncm.list_lbaas_members(p['id']))
-        print '----- health monitors -----'
+        print('----- health monitors -----')
         pp(self.ncm.list_lbaas_healthmonitors())
 
 
@@ -258,28 +258,28 @@ def tst_setup(request, symbols):
         testenv.client_ssh.close()
         testenv.server_ssh.close()
 
-    print "\ncreate SSH conn to client"
+    print("\ncreate SSH conn to client")
     testenv.client_ssh = paramiko.SSHClient()
     testenv.client_ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     testenv.client_ssh.connect(testenv.symbols['client_public_mgmt_ip'],
                                username=testenv.symbols['guest_username'],
                                password=testenv.symbols['guest_password'])
-    print "create SSH conn to server"
+    print("create SSH conn to server")
     testenv.server_ssh = paramiko.SSHClient()
     testenv.server_ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     testenv.server_ssh.connect(testenv.symbols['server_public_mgmt_ip'],
                                username=testenv.symbols['guest_username'],
                                password=testenv.symbols['guest_password'])
-    print "bigip object"
+    print("bigip object")
     testenv.bigip = BigIP(testenv.symbols['bigip_public_mgmt_ip'],
                           testenv.symbols['bigip_username'],
                           testenv.symbols['bigip_password'])
     testenv.request = request
-    print "LBaaSv2 with symbols"
+    print("LBaaSv2 with symbols")
     testenv.lbm = LBaaSv2(testenv.symbols)
-    print "clear proxies"
+    print("clear proxies")
     # > testenv.lbm.clear_proxies()
-    print "test setup complete"
+    print("test setup complete")
     #request.addfinalizer(tst_teardown)
     return testenv
 
@@ -290,11 +290,11 @@ def exec_command(ssh, command):
     status = stdout.channel.recv_exit_status()
     output = stdout.read()
     if status:
-        print '----- sterr -----'
-        print stderr
+        print('----- sterr -----')
+        print(stderr)
         pp(stderr.channel.__dict__)
         error = stderr.read()
-        print error
+        print(error)
     assert status == 0
     return output.strip()
 
@@ -324,28 +324,28 @@ def create_container(name, container_name, cert_payload, key_payload):
                                 project_domain_name='default',
                                 password=conf.os_password,
                                 project_name=conf.os_project_name)
-    print "auth object created..."
+    print("auth object created...")
     sess = session.Session(auth=auth)
-    print "session started..."
+    print("session started...")
     barbican = client.Client(session=sess)
-    print "barbican instance started..."
+    print("barbican instance started...")
     secret_cert = barbican.secrets.create(name + '.crt', payload=cert_payload)
-    print "secret cert created..."
+    print("secret cert created...")
     secret_cert.store()
-    print "secret cert stored..."
+    print("secret cert stored...")
     secret_key = barbican.secrets.create(name + '.key', payload=key_payload)
-    print "secret key created..."
+    print("secret key created...")
     secret_key.store()
-    print "secret key stored..."
+    print("secret key stored...")
     container = barbican.containers.create_certificate(name=container_name,
                                                        certificate=secret_cert,
                                                        private_key=secret_key)
-    print "container created... " + container_name + "\n" + str(container)
+    print("container created... " + container_name + "\n" + str(container))
     container_ref = container.store()
-    print "container stored... ref: " + container_ref
+    print("container stored... ref: " + container_ref)
     assert container_ref.startswith("http")
     retrieved_container = barbican.containers.get(container_ref)
-    print "container retrieved by ref:\n" + str(retrieved_container)
+    print("container retrieved by ref:\n" + str(retrieved_container))
     return container_ref
 
 
@@ -361,50 +361,50 @@ def test_create_containers():
     key_payload1   = read_file('server.key')
     container_ref1 = create_container('container1', "tls container cert1", cert_payload1, key_payload1)
     assert container_ref1.startswith("http")
-    print "container1 created...ref: " + container_ref1
+    print("container1 created...ref: " + container_ref1)
     cert_payload2  = read_file('server2.crt')
     key_payload2   = read_file('server2.key')
     container_ref2 = create_container('container2', "tls container cert2", cert_payload2, key_payload2)
     assert container_ref2.startswith("http")
-    print "container2 created...ref: " + container_ref2
+    print("container2 created...ref: " + container_ref2)
 
 
 def test_cert_manager():
     conf = Config()
-    print "Test Cert Manager, container1..."
+    print("Test Cert Manager, container1...")
     cert_manager = barbican_cert.BarbicanCertManager(conf)
-    print "cert manager started..."
+    print("cert manager started...")
     cert = cert_manager.get_certificate(container_ref1)
-    print "container1 cert retrieved... \n" +  cert
+    print("container1 cert retrieved... \n" +  cert)
     assert cert == cert_payload1
 
     key = cert_manager.get_private_key(container_ref1)
-    print "container1 key retrieved... \n" + key
+    print("container1 key retrieved... \n" + key)
     assert key == key_payload1
 
 
 def test_configure_bigip():
     bigip = ManagementRoot(symbols_data.bigip_ip, symbols_data.bigip_username, symbols_data.bigip_password)
-    print "BigIP object created..."
+    print("BigIP object created...")
     ssl_profile.SSLProfileHelper.create_client_ssl_profile(bigip, 'server', cert_payload1, key_payload1)
-    print "SSL profile created..."
+    print("SSL profile created...")
 
 
 @log_test_call
 def test_solution(tst_setup):
     te = tst_setup
     te.webserver_started = False
-    print "create proxy"
+    print("create proxy")
     proxy = te.lbm.create_proxy()
 
-    print "start web server"
-    command = ('python -m SimpleHTTPServer %s >/dev/null 2>&1 & echo $!' %
+    print("start web server")
+    command = ('python3 -m SimpleHTTPServer %s >/dev/null 2>&1 & echo $!' %
                te.symbols['server_http_port'])
     exec_command(te.server_ssh, command)
     te.webserver_started = True
 
     # wait for health monitor to show server as up
-    print 'waiting for member to become active...',
+    print('waiting for member to become active...', end=' ')
     # lbaasv2 bug: lbaas_show_member does not return status attribute to
     # know when member comes online.
     #te.lbm.wait_for_object_state('status', 'ACTIVE',
@@ -433,13 +433,13 @@ def test_solution(tst_setup):
         if attempts >= 15:
             raise MaximumNumberOfAttemptsExceeded
         member.refresh()
-    print 'COMPLETE'
+    print('COMPLETE')
 
     # send requests from client
-    print 'sending request from client....',
+    print('sending request from client....', end=' ')
     url = 'https://%s:%s' % (proxy.loadbalancer['vip_address'],
                                 proxy.listener['protocol_port'])
     output = exec_command(te.client_ssh, '$HOME/get.py %s' % url)
     assert output == '200'
-    print 'SUCCESS'
+    print('SUCCESS')
 

@@ -62,19 +62,19 @@ if __name__ == '__main__':
 
     arg="ubuntu-devstack-2:b33cd191-4ea1-5ee8-bc88-7ded6c72f2c7"
     ret = client.call(ctxt, 'get_active_services_for_agent', host=arg)
-    print ret
+    print(ret)
 
 
-    print "Create Network"
+    print("Create Network")
     net = client.call(ctxt, 'create_network',
                       tenant_id='c4021c6afe1c4c01892bf9f12eacace7',
                       name='net1',
                       admin_state_up=True,
                       shared=False
     )
-    print net
+    print(net)
     
-    print "Create Subnet"
+    print("Create Subnet")
     cidr='192.168.101.0/24'
     subnet_name='subnet1'
     subnet = client.call(ctxt, 'create_subnet',
@@ -86,33 +86,33 @@ if __name__ == '__main__':
                          shared=False,
                          enable_dhcp=False
     )
-    print subnet
+    print(subnet)
 
-    print "Create Port on Subnet"
+    print("Create Port on Subnet")
     port = client.call(ctxt, 'create_port_on_subnet',
                        subnet_id=subnet['id'],
                        mac_address="aa:bb:cc:dd:ee:ff",
                        name="test_port")
-    print port
+    print(port)
     
-    print 'Getting ports on network %s: ' % net['id']
+    print('Getting ports on network %s: ' % net['id'])
     ports = client.call(ctxt, 'get_ports_on_network',
                         network_id=net['id'])
-    print ports
+    print(ports)
 
     mac_addrs = ['aa:bb:cc:dd:ee:ff']
     ports = client.call(ctxt, 'get_ports_for_mac_addresses',
                         mac_addresses=mac_addrs)
-    print ports
+    print(ports)
 
     port_name="test_port"
     port = client.call(ctxt, 'get_port_by_name',
                        port_name=port_name)
-    print port
+    print(port)
     ret = client.call(ctxt, 'delete_port', port_id=port[0]['id'])
 
 
-    print "Create Port on Subnet"
+    print("Create Port on Subnet")
     port = client.call(ctxt, 'create_port_on_subnet',
                        subnet_id=subnet['id'],
                        mac_address="aa:bb:cc:dd:ee:ff",

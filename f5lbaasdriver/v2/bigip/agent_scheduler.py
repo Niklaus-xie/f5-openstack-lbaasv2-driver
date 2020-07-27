@@ -20,6 +20,7 @@ import random
 
 from oslo_log import log as logging
 
+from neutron.agent.common import utils as agent_utils
 from neutron_lbaas import agent_scheduler
 from neutron_lbaas.extensions import lbaas_agentschedulerv2
 
@@ -102,7 +103,7 @@ class TenantScheduler(agent_scheduler.ChanceScheduler):
         for agent in all_agents:
 
             if not plugin.db.is_eligible_agent(active=True, agent=agent):
-                agent_dead = plugin.db.is_agent_down(
+                agent_dead = agent_utils.is_agent_down(
                     agent['heartbeat_timestamp'])
                 if not agent['admin_state_up'] or agent_dead:
                     return_agents.append(agent)
@@ -273,7 +274,7 @@ class TenantScheduler(agent_scheduler.ChanceScheduler):
                 # lowest capacity score
                 lowest_utilization = 1.0
                 selected_group = 1
-                for group, capacity in capacity_by_group.items():
+                for group, capacity in list(capacity_by_group.items()):
                     if capacity < lowest_utilization:
                         lowest_utilization = capacity
                         selected_group = group

@@ -78,7 +78,7 @@ def main():
     rpc_client = messaging.RPCClient(transport, target)
 
     ctxt = context.get_admin_context().to_dict()
-    print(loadbalancer['id'])
+    print((loadbalancer['id']))
     time.sleep(5)
     service = rpc_client.call(ctxt, 'get_service_by_loadbalancer_id',
                               loadbalancer_id=loadbalancer['id'],

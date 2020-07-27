@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Copyright 2014 F5 Networks Inc.
 #
@@ -16,7 +16,7 @@
 #
 
 
-from __future__ import absolute_import
+
 
 import errno
 import os
@@ -107,8 +107,8 @@ def test_add_env_confopt_value(temp_files):
     testconf.parse()
     original_values = set()
     original_service_providers = set()
-    for section in testconf.sections.values():
-        for option, values in section.items():
+    for section in list(testconf.sections.values()):
+        for option, values in list(section.items()):
             if option == 'service_provider':
                 original_service_providers.update(set(values))
             original_values.update(set(values))
@@ -116,8 +116,8 @@ def test_add_env_confopt_value(temp_files):
     new_config = environment_library.add_env_confopt_value(FAKE_ENV)
     new_values = set()
     new_service_providers = set()
-    for section in new_config.sections.values():
-        for option, values in section.items():
+    for section in list(new_config.sections.values()):
+        for option, values in list(section.items()):
             if option == 'service_provider':
                 new_service_providers.update(set(values))
             new_values.update(set(values))

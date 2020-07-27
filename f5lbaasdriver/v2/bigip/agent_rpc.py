@@ -1,5 +1,5 @@
 # coding=utf-8
-u"""RPC Calls to Agents for F5® LBaaSv2."""
+"""RPC Calls to Agents for F5® LBaaSv2."""
 # Copyright 2016 F5 Networks Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@ from oslo_log import helpers as log_helpers
 from oslo_log import log as logging
 import oslo_messaging as messaging
 
-from neutron.common import rpc
+from neutron_lib import rpc
 
 from f5lbaasdriver.v2.bigip import constants_v2 as constants
 

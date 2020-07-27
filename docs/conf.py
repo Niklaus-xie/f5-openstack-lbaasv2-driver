@@ -65,9 +65,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'F5 Driver for OpenStack LBaaSv2'
-copyright = u'2018 F5 Networks Inc.'
-author = u'F5 Networks'
+project = 'F5 Driver for OpenStack LBaaSv2'
+copyright = '2018 F5 Networks Inc.'
+author = 'F5 Networks'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -254,8 +254,8 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'f5-openstack-lbaasv2-driver.tex',
-     u'F5 Driver for OpenStack LBaaSv2 Documentation',
-     u'F5 Networks', 'manual'),
+     'F5 Driver for OpenStack LBaaSv2 Documentation',
+     'F5 Networks', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -285,7 +285,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     (master_doc, 'f5-openstack-lbaasv2-driver',
-     u'F5 Driver for OpenStack LBaaSv2 Documentation',
+     'F5 Driver for OpenStack LBaaSv2 Documentation',
      [author], 1)
 ]
 
@@ -300,7 +300,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'f5-openstack-lbaasv2-driver',
-     u'F5 Driver for OpenStack LBaaSv2 Documentation',
+     'F5 Driver for OpenStack LBaaSv2 Documentation',
      author, 'f5-openstack-lbaasv2-driver', 'Miscellaneous'),
 ]
 

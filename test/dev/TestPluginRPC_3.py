@@ -56,16 +56,16 @@ if __name__ == '__main__':
 
     ctxt=context.get_admin_context().to_dict()
 
-    print "Create Network"
+    print("Create Network")
     net = client.call(ctxt, 'create_network',
                       tenant_id='c4021c6afe1c4c01892bf9f12eacace7',
                       name='net1',
                       admin_state_up=True,
                       shared=False
     )
-    print net
+    print(net)
     
-    print "Create Subnet"
+    print("Create Subnet")
     cidr='192.168.101.0/24'
     subnet_name='subnet1'
     subnet = client.call(ctxt, 'create_subnet',
@@ -77,38 +77,38 @@ if __name__ == '__main__':
                          shared=False,
                          enable_dhcp=False
     )
-    print subnet
+    print(subnet)
 
-    print "Create Port on Subnet"
+    print("Create Port on Subnet")
     port = client.call(ctxt, 'create_port_on_subnet_with_specific_ip',
                        subnet_id=subnet['id'],
                        mac_address="aa:bb:cc:dd:ee:ff",
                        name="test_port",
                        ip_address='192.168.101.10'
     )
-    print port
+    print(port)
     ret = client.call(ctxt, 'delete_port', port_id=port['id'])
 
-    print "Allocate Specific Address on Subnet"
+    print("Allocate Specific Address on Subnet")
     port = client.call(ctxt, 'allocate_fixed_address_on_subnet',
                        subnet_id=subnet['id'])
-    print port
+    print(port)
     ret = client.call(ctxt, 'delete_port', port_id=port['id'])
 
-    print "Allocate Specific Fixed Address on Subnet"
+    print("Allocate Specific Fixed Address on Subnet")
     port = client.call(ctxt, 
                        'allocate_specific_fixed_address_on_subnet',
                        subnet_id=subnet['id'],
                        ip_address='192.168.101.101'
     )
-    print port
+    print(port)
 
-    print "Deallocate Specific Fixed Address on Subnet"
+    print("Deallocate Specific Fixed Address on Subnet")
     client.call(ctxt,
                 'deallocate_fixed_address_on_subnet',
                 subnet_id=subnet['id'],
                 fixed_addresses=['192.168.101.101'])
-    print port
+    print(port)
 
     ret = client.call(ctxt, 'delete_port', port_id=port['id'])
     ret = client.call(ctxt, 'delete_subnet', subnet_id=subnet['id'])
