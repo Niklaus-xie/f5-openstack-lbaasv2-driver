@@ -89,7 +89,7 @@ class DisconnectedService(object):
             if agent_hosts:
                 for host_id in agent_hosts:
                     levels = db.get_binding_levels(
-                        context, port_id, host_id
+                        context.session, port_id, host_id
                     )
                     if levels:
                         LOG.debug('levels: %s binding host_id: %s' % (
