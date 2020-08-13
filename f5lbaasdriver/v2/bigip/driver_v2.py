@@ -64,14 +64,14 @@ OPTS = [
     ),
     cfg.BoolOpt(
         'to_delete_last_port',
-        default=True,
+        default=False,
         help=("By default, it deletes every fake port,"
               "if set to False, then it leaves one fake "
               "un-deleted ")
     ),
     cfg.StrOpt(
         'unlegacy_setting_placeholder_driver_side',
-        default=None,
+        default='debug',
         help=('used in certain hpb cases to differenciate legacy scenarios')
     )
 ]
