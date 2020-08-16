@@ -875,3 +875,30 @@ class LBaaSv2PluginCallbacksRPC(object):
             has_l7policy[listener_id] = result
         LOG.debug("has_l7policy: ({})".format(has_l7policy))
         return has_l7policy
+
+    def get_member_network(self, context, network_id):
+        """Get from Neutron."""
+        LOG.debug('get_member_network called')
+
+        network = self.driver.plugin.db._core_plugin.get_network(
+            context,
+            network_id
+        )
+
+        if 'provider:network_type' not in network:
+            network['provider:network_type'] = 'undefined'
+
+        if 'provider:segmentation_id' not in network:
+            network['provider:segmentation_id'] = 0
+
+        if 'segments' in network:
+            LOG.info("at the beginning %s.", network)
+            for segment in network['segments']:
+                if segment['provider:network_type'] == 'vlan':
+                    network['provider:network_type'] = 'vlan'
+                    network['provider:segmentation_id'] = segment['provider:segmentation_id']
+                    network['provider:physical_network'] = segment['provider:physical_network']
+
+            LOG.info("at the end %s.", network)
+
+        return network
