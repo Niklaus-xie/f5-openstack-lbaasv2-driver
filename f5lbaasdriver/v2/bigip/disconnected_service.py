@@ -127,8 +127,11 @@ class DisconnectedService(object):
             LOG.info(network_segments)
 
             for each_seg in network_segments:
-                if each_seg['network_type'].lower() == 'vlan':
+                if (each_seg['network_type'].lower() == 'vlan' and
+                    each_seg['physical_network'].lower() == 'lb_physical_network'):
                     zte_segment = each_seg
+                    LOG.info('this segment is:')
+                    LOG.info(zte_segment)
                     break
 
             return zte_segment
