@@ -419,10 +419,12 @@ class LoadBalancerManager(EntityManager):
 
             # from the cherry pick
             # there is no self.loadbalancer anymore, so modify this
+            LOG.info('before get_loadbalancers')
             lbs = driver.plugin.db.get_loadbalancers(
                 context,
                 {"project_id": [loadbalancer.tenant_id]}
             )
+            LOG.info('after get_loadbalancers')
 
             lb_dict = loadbalancer.to_api_dict()
             lb_dict["last_one"] = True
