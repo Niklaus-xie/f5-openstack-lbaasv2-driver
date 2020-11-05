@@ -182,22 +182,27 @@ class TenantScheduler(agent_scheduler.ChanceScheduler):
                 return {}
         return agent_conf
 
-    def schedule(self, plugin, context, loadbalancer_id, env=None):
+    def schedule(
+        self, plugin, context, loadbalancer_id, env=None,
+        the_tenant_id=None
+    ):
         """Schedule the loadbalancer to an active loadbalancer agent.
 
         If there is no enabled agent hosting it.
         """
 
         with context.session.begin(subtransactions=True):
-            LOG.info('get_loadbalancer start')
-            loadbalancer = plugin.db.get_loadbalancer(context, loadbalancer_id)
-            LOG.info('get_loadbalancer end')
+            if not the_tenant_id:
+                LOG.info('get_loadbalancer start')
+                loadbalancer = plugin.db.get_loadbalancer(context, loadbalancer_id)
+                LOG.info('get_loadbalancer end')
+                the_tenant_id = loadbalancer.get('tenant_id')
             # If the loadbalancer is hosted on an active agent
             # already, return that agent or one in its env
             lbaas_agent = self.get_lbaas_agent_hosting_loadbalancer(
                 plugin,
                 context,
-                loadbalancer.id,
+                loadbalancer_id,
                 env
             )
 
@@ -222,7 +227,7 @@ class TenantScheduler(agent_scheduler.ChanceScheduler):
             if len(candidates) == 0:
                 LOG.error('No f5 lbaas agents are active for env %s' % env)
                 raise lbaas_agentschedulerv2.NoActiveLbaasAgent(
-                    loadbalancer_id=loadbalancer.id)
+                    loadbalancer_id=loadbalancer_id)
 
             # We have active candidates to choose from.
             # Qualify them by tenant affinity and then capacity.
@@ -255,7 +260,7 @@ class TenantScheduler(agent_scheduler.ChanceScheduler):
                 assigned_lbs = plugin.db.list_loadbalancers_on_lbaas_agent(
                     context, candidate['id'])
                 for assigned_lb in assigned_lbs:
-                    if loadbalancer.tenant_id == assigned_lb.tenant_id:
+                    if the_tenant_id == assigned_lb.tenant_id:
                         chosen_agent = candidate
                         break
 
@@ -295,16 +300,16 @@ class TenantScheduler(agent_scheduler.ChanceScheduler):
                 LOG.warn('Group capacity in environment %s were %s.'
                          % (env, capacity_by_group))
                 raise lbaas_agentschedulerv2.NoEligibleLbaasAgent(
-                    loadbalancer_id=loadbalancer.id)
+                    loadbalancer_id=loadbalancer_id)
 
             binding = agent_scheduler.LoadbalancerAgentBinding()
             binding.agent = chosen_agent
-            binding.loadbalancer_id = loadbalancer.id
+            binding.loadbalancer_id = loadbalancer_id
             context.session.add(binding)
 
             LOG.debug(('Loadbalancer %(loadbalancer_id)s is scheduled to '
                        'lbaas agent %(agent_id)s'),
-                      {'loadbalancer_id': loadbalancer.id,
+                      {'loadbalancer_id': loadbalancer_id,
                        'agent_id': chosen_agent['id']})
 
             return chosen_agent

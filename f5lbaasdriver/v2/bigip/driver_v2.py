@@ -218,7 +218,8 @@ class EntityManager(object):
             self.driver.plugin,
             context,
             loadbalancer.id,
-            self.driver.env
+            self.driver.env,
+            loadbalancer.get('tenant_id', None)
         )
         service = self.driver.service_builder.build(
             context, loadbalancer, agent, **kwargs)
@@ -465,7 +466,8 @@ class LoadBalancerManager(EntityManager):
                 driver.plugin,
                 context,
                 loadbalancer.id,
-                driver.env
+                driver.env,
+                loadbalancer.get('tenant_id', None)
             )
             service = driver.service_builder.build(context,
                                                    loadbalancer,
@@ -702,7 +704,8 @@ class MemberManager(EntityManager):
                     self.driver.plugin,
                     context,
                     lb.id,
-                    self.driver.env
+                    self.driver.env,
+                    lb.get('tenant_id', None)
                 )
                 LOG.info(this_agent)
                 agent_host = this_agent.get('host')
@@ -796,7 +799,8 @@ class MemberManager(EntityManager):
                 LOG.info("time for subnet  %.5f secs" % (time() - start_time))
 
                 agent = self.driver.scheduler.schedule(
-                    self.driver.plugin, context, lb.id, self.driver.env
+                    self.driver.plugin, context, lb.id, self.driver.env,
+                    lb.get('tenant_id', None)
                 )
                 LOG.info("time for agent  %.5f secs" % (time() - start_time))
                 LOG.info(agent)
