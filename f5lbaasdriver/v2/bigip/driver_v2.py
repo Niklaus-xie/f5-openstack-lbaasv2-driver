@@ -764,10 +764,30 @@ class MemberManager(EntityManager):
             LOG.error("no members found in members. Just return.")
             return
 
+        driver = self.driver
+        lb = members[0].pool.loadbalancer
+        lb_id = lb.id
+
+        # I should delete these following lines
+        tmp_pools = lb.pools
+        LOG.info('the lb.pools tmp_pools:')
+        LOG.info(tmp_pools)
+
+        tmp_members = []
+        for p in tmp_pools:
+            tmp_members.extend([m for m in p.members])
+        LOG.info('the tmp_members:')
+        LOG.info(tmp_members)
+
+        LOG.info('before get_loadbalancer inside create_bulk')
+        the_lb_now = driver.plugin.db.get_loadbalancer(
+                    context,
+                    id=lb_id
+                )
+        LOG.info('after get_loadbalancer inside create_bulk')
+
         for member in members:
             if member.subnet_id not in subnets:
-                lb = member.pool.loadbalancer
-                driver = self.driver
                 subnet = driver.plugin.db._core_plugin.get_subnet(
                     context, member.subnet_id
                 )
@@ -775,7 +795,7 @@ class MemberManager(EntityManager):
                 LOG.info("time for subnet  %.5f secs" % (time() - start_time))
 
                 agent = self.driver.scheduler.schedule(
-                    self.driver.plugin, context, lb.id, self.driver.env
+                    self.driver.plugin, context, lb_id, self.driver.env
                 )
                 LOG.info("time for agent  %.5f secs" % (time() - start_time))
                 LOG.info(agent)
@@ -798,7 +818,7 @@ class MemberManager(EntityManager):
                 api_dict = member.to_dict(pool=False)
                 subnets.append(member.subnet_id)
 
-        self._call_rpc(context, lb, member, api_dict, 'create_member',
+        self._call_rpc(context, the_lb_now, member, api_dict, 'create_member',
                        multiple=True)
 
         for port in p_list:
